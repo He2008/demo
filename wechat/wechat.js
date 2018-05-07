@@ -68,16 +68,44 @@ Wechat.prototype.getAccessToken = function (req, res) {
 
 Wechat.prototype.getTicket = function () {
     let currentTime = new Date().getTime()
-    if (ticketJSON.ticket === "" || ticketJSON.expires_time < currentTime) {
-        axios.get(`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessTokenJSON.access_token}&type=jsapi`)
-            .then(res => {
-                ticketJSON.ticket = res.data.ticket
-                ticketJSON.expires_time = new Date().getTime() + (parseInt(result.expires_in) - 200) * 1000;
-                fs.writeFileSync('./wechat/jsapi_ticket.json', JSON.stringify(ticketJSON))
-                resolve(ticketJSON)
-            })
-    } else {
-        resolve(res)
+    return new Promise((resolve, reject) => {
+        if (ticketJSON.ticket === "" || ticketJSON.expires_time < currentTime) {
+            axios.get(`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${accessTokenJSON.access_token}&type=jsapi`)
+                .then(res => {
+
+                    ticketJSON.ticket = res.data.ticket
+                    ticketJSON.expires_time = new Date().getTime() + (parseInt(res.data.expires_in) - 200) * 1000;
+                    fs.writeFileSync('./wechat/jsapi_ticket.json', JSON.stringify(ticketJSON))
+                    resolve(ticketJSON)
+                })
+        } else {
+            resolve(ticketJSON)
+        }
+    })
+
+}
+
+Wechat.prototype.getSignature = function (reqUrl) {
+    let obj = {
+        noncestr :'Wm3WZYTPz0wzccnW',
+        jsapi_ticket :ticketJSON.ticket,
+        timestamp : 1414587457,
+        url :reqUrl
+    }
+    let arr = ['noncestr', 'jsapi_ticket', 'timestamp', 'url']
+    arr.sort()
+    let string1 = ''
+    arr.forEach((v,i)=>{
+        string1 += `${v}=${obj[v]}${i===3?'':'&'}`
+    })
+    const hashCode = crypto.createHash('sha1')
+    let signature =  hashCode.update(string1, 'utf8').digest('hex');
+    return {
+        appId:this.appID,
+        timestamp:obj.timestamp,
+        noncestr:obj.noncestr,
+        signature:signature,
+        url:obj.url
     }
 }
 

@@ -16,7 +16,17 @@ const config ={
 var router = express.Router();
 let wechatApp = new Wechat(config)
 
-router.get('/', (req, res) => {
+router.get('/',(req,res)=>{
+    let obj = wechatApp.getSignature(req.protocol+'://'+req.host+req.originalUrl);
+    console.log('请求wechat啦')    
+    res.render('wechat',{
+        signature:obj
+    })
+})
+
+
+router.get('/auth', (req, res) => {
+    console.log('123')
     wechatApp.auth(req,res)
 })
 router.get('/init',(req,res)=>{
@@ -27,5 +37,8 @@ router.get('/init',(req,res)=>{
     }).catch(err=>{
         console.log(err)
     })
+})
+router.get('/signature',(req,res)=>{
+    res.send()
 })
 module.exports = router
