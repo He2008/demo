@@ -18,7 +18,6 @@
             <button class="ui  button" style="display: none" id='stop' onclick="stop()">点击停止</button>
             <p id="text">微信语音识别DEMO</p>
     </div>
-   
 </body>
 <script>
     var conf = {
@@ -75,10 +74,17 @@
             localId: id, // 需要识别的音频的本地Id，由录音相关接口获得
             isShowProgressTips: 1, // 默认为1，显示进度提示
             success: function (res) {
-            $('#start').toggle()
-            $('#stop').toggle()
+      
                 $('#text').text(res.translateResult)
                 // alert(res.translateResult); // 语音识别的结果
+            },
+            complete(){
+                $('#start').toggle()
+            $('#stop').toggle()
+            },
+            fail(){
+                $('#text').text('识别失败啦')
+                
             }
         });
     }

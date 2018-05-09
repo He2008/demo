@@ -4,6 +4,7 @@ const path = require('path')
 
 const upload = require('./router/upload')
 const wechat =require('./router/wechat')
+const xf = require('./router/xf')
 
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -20,6 +21,8 @@ app.set('view engine', 'ejs')// 设置模板引擎为 ejs
 
 app.use('/upload', upload)
 app.use('/wechat', wechat)
+app.use('/xf', xf)
+
 app.get('/', (req, res) => {
     res.send('e')
 })

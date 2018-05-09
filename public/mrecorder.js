@@ -27,7 +27,7 @@ var mRecorder = function(opt){
     buffer: [], //录音缓存
     inputSampleRate: context.sampleRate,  //输入采样率
     inputSampleBits: 16,  // 输入采样数位 8, 16
-    outputSampleRate: 16000,  // 输出采样率
+    outputSampleRate: 410000/6,  // 输出采样率
     oututSampleBits: 16, // 输出采样数位 8, 16
     input: function (data) {
       this.buffer.push(new Float32Array(data));
