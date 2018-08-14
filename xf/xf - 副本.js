@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const axios = require('axios')
 const util = require('util')
 const fs = require('fs')
-
+123
 let md5Sign = function (data) {
     var md5 = crypto.createHash('md5').update(data).digest('hex');
     return md5;
